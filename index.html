@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Simple CSS Charts</title>
+        <style>
+            .pie, .bar, .point, .filled-line, .line, .text {
+                height: 10em;
+                width: 10em;
+                padding: 0;
+                list-style-type: none;
+            }
+
+            .pie {
+                position: relative;
+            }
+            .pie > li {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+                background: conic-gradient(transparent var(--previous-sum), var(--color) var(--previous-sum));
+            }
+
+            .bar {
+                display: flex;
+                align-items: end;
+            }
+            .bar > li {
+                background-color: var(--color);
+                height: var(--value);
+                width: calc(100% / var(--count));
+            }
+
+            .point {
+                display: flex;
+                position: relative;
+            }
+            .point > li {
+                border-radius: 100%;
+                background-color: var(--color);
+                width: calc(20% / var(--count));
+                height: calc(20% / var(--count));
+                margin: auto auto var(--value) auto;
+            }
+
+            .filled-line {
+                display: flex;
+            }
+            .filled-line > li {
+                background-color: lightgray;
+                height: 100%;
+                width: calc(100% / var(--count));
+                clip-path: polygon(
+                    0 100%, 
+                    0 calc(100% - var(--previous-value)), 
+                    100% calc(100% - var(--value)), 
+                    100% 100%);
+            }
+
+            .line {
+                display: flex;
+            }
+            .line > li {
+                background-color: black;
+                height: 100%;
+                width: 100%;
+                clip-path: polygon(
+                    0 calc(100% - var(--previous-value)), 
+                    100% calc(100% - var(--value)), 
+                    100% calc(100% - var(--value) + 2px), 
+                    0 calc(100% - var(--previous-value) + 2px));  
+            }
+
+            .horizontal-grid {
+                position: relative;
+            }
+            .horizontal-grid::after {
+                content: '';
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                background-size: 100% 20%;
+                background-image:
+                    linear-gradient(transparent, transparent),
+                    linear-gradient(to top, black 1px, transparent 1px);
+            }
+
+            .text {
+                border: solid 1px black;
+                height: auto;
+            }
+            .text:before {
+                content: 'Votes:';
+                display: inline-block;
+                width: 9em;
+                padding-left: 1em;
+            }
+            .text > li::before, .text > li::after {
+                border-top: solid 1px black;
+                display: inline-block;
+            }
+            .text > li::before {
+                border-right: none;
+                content: var(--label);
+                width: 5em;
+                padding-left: 1em;
+            }
+            .text > li::after {
+                border-left: none;
+                content: var(--value-text);
+                width: 3em;
+                padding-right: 1em;
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <ul id="data" class="pie" style="--count: 3;">
+            <li style="--label: 'Yay'; --value: 35%; --value-text: '25%'; --previous-value: 0%; --previous-sum: 0%; --color: green;"></li>
+            <li style="--label: 'Nay'; --value: 55%; --value-text: '55%'; --previous-value: 35%; --previous-sum: 35%; --color: red;"></li>
+            <li style="--label: 'Blank'; --value: 10%; --value-text: '10%'; --previous-value: 55%; --previous-sum: 90%; --color: blue;"></li>
+        </ul>
+        <div>
+            <button onclick="setDataClass('pie')">Pie</button>
+            <button onclick="setDataClass('bar')">Bar</button>
+            <button onclick="setDataClass('point horizontal-grid')">Point</button>
+            <button onclick="setDataClass('filled-line horizontal-grid')">Filled line</button>
+            <button onclick="setDataClass('line horizontal-grid')">Line</button>
+            <button onclick="setDataClass('text')">Text</button>
+        </div>
+        <script type="text/javascript">
+            function setDataClass(className) {
+                document.getElementById('data').className = className;
+            }
+        </script>
+    </body>
+  </body>
+</html>
